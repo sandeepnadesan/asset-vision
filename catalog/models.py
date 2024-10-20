@@ -48,7 +48,7 @@ class Device(models.Model):
     status = models.CharField(max_length=1, choices=LOAN_STATUS, blank=True, default='0',
                                  help_text='Asset Status')
     LOAN_SUBSTATUS = (
-        ('0', 'Completed Shipment'),
+        ('0', 'DELIVERED'),
         ('1', 'Functional'),
         ('2', 'Not In use'),
         ('3', 'In Inventory'),
@@ -127,7 +127,7 @@ class Archive(models.Model):
     status = models.CharField(max_length=1, choices=LOAN_STATUS, blank=True, default='0',
                                  help_text='Asset Status')
     LOAN_SUBSTATUS = (
-        ('0', 'Completed Shipment'),
+        ('0', 'DELIVERED'),
         ('1', 'Functional'),
         ('2', 'Not In use'),
         ('3', 'In Inventory'),
