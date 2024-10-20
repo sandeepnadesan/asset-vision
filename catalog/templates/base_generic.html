@@ -14,12 +14,18 @@
 
   <style>
     /* General Body Styling */
+    html, body {
+        height: 100%; /* Full height */
+        margin: 0; /* Remove default margin */
+    }
+
     body {
         font-family: 'Arial', sans-serif;
         background-color: #f0f4f7; /* Light gray background */
         color: #343a40; /* Dark text color */
-        background-image: url('https://img.freepik.com/free-photo/finance-money-debt-credit-balance-concept_53876-127372.jpg?w=1380&t=st=1728229886~exp=1728230486~hmac=d3d4fbc979589b1a6a9dc030ce4f90ff3967449c052bc63a99e979c373105cca'); /* Placeholder image */
-
+        /* background-image: url('your-image-url.jpg'); Placeholder image */
+        display: flex;
+        flex-direction: column;
     }
 
     /* Navbar Styling */
@@ -45,22 +51,18 @@
     }
 
     /* Content Area Styling */
-    .container {
-      
+    .content-area {
+        flex: 1; /* Allows this area to grow and take up remaining space */
         margin-top: 20px;
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         background-color: rgb(255, 254, 254); /* White background for content */
-        padding: 20px;
-    }
-
-    /* Add a background image to the content */
-    .content-area {
-        background-size: cover;
-        background-position: center;
         padding: 40px; /* Extra padding for content */
-        border-radius: 8px; /* Rounded corners */
         color: #333; /* Dark text for contrast */
+        display: flex; /* Center content vertically */
+        flex-direction: column; /* Column layout for content */
+        justify-content: center; /* Center vertically */
+        align-items: center; /* Center horizontally */
     }
 
     /* Pagination Styling */
@@ -100,7 +102,7 @@
 </head>
 
 <body>
-  <div class="container">
+  <div class="container-fluid p-0">  <!-- Changed to container-fluid -->
     {% block sidebar %}
       <nav class="navbar navbar-expand-lg navbar-light">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">

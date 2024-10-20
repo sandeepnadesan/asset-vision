@@ -3,51 +3,145 @@
 {% load static %}
 {% block content %}
 {% load bootstrap4 %}
-<div class="container-fluid">
-<h1>Asset Management</h1>
+<div class="container-fluid p-0">  <!-- Removed padding -->
+    <h1 class="text-center">Asset Management</h1>  <!-- Centered the heading -->
 
-  <ul>
-    <li><strong>Devices:</strong> {{ num_devices }}</li>
-    <li><strong>Laptops:</strong> {{ num_lt }}</li>
-    <li><strong>Desktop:</strong> {{ num_dt }}</li>
-	<li><strong>Monitor:</strong> {{ num_mt }}</li>
-    <li><strong>Deployed:</strong> {{ num_dl_dep }}</li>
-	  <li><strong>Stock:</strong> {{ num_dv_stk }}</li>
-	  <li><strong>New:</strong> {{ num_dv_new }}</li>
+    <div class="row">
+        <div class="col-md-8">  <!-- Set width of the table to 8 columns -->
+            <table class="table table-striped table-hover table-bordered">  <!-- Removed w-100 class -->
+                <tbody>
+                    <tr>
+                        <td rowspan="2">Device</td>
+                        <th>Total</th>
+                        <td>Laptop</td>
+                        <td>Desktop</td>
+                        <td>Monitor</td>
+                    </tr>
+                    <tr>
+                        <th>{{ num_devices }}</th>
+                        <td>{{ num_laptops }}</td>
+                        <td>{{ num_desktops }}</td>
+                        <td>{{ num_monitors }}</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2">Inventory</td>
+                        <td>Deployed:</td>
+                        <td>Stock:</td>
+                        <td>New:</td>
+                    </tr>
+                    <tr>
+                        <td>{{ num_dl_dep }}</td>
+                        <td>{{ num_dv_stk }}</td>
+                        <td>{{ num_dv_new }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-    <li><strong>Customers:</strong> {{ num_authors }}</li>
-  </ul>
-<!-- <p>You have visited this page {{ num_visits }}{% if num_visits == 1 %} time{% else %} times{% endif %}.</p> -->
-<table class="table table-striped table-hover table-bordered">
-	<tbody>
-		<tr>
-			<td rowspan="2">Device</td>
-			<th> Total </th>
-			<td>Laptop</td>
-			<td>Desktop</td>
-			<td>Monitor</td>
-		</tr>
-		<tr>
-			<th> {{ num_devices }}</th>
-			<td>: {{ num_lt }}</td>
-			<td>: {{ num_dt }}</td>
-			<td>: {{ num_mt }}</td>
-		</tr>
-		<tr>
-			<td rowspan="2">Inventory</td>
-			<td>Deployed:</td>
-			<td>Stock:</td>
-			<td>New:</td>
-		</tr>
-		<tr>
-			<td>{{ num_dl_dep }}</td>
-			<td>{{ num_dv_stk }}</td>
-			<td>{{ num_dv_new }}</td>
-		</tr>
-	</tbody>
-</table>
+        <div class="col-md-4">  <!-- Set width of the graph to 4 columns -->
+            <canvas id="deviceCountChart" width="400" height="200"></canvas>
+        </div>
+    </div>
 
+    <!-- New section for the normal plot graph -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <canvas id="impactFactorChart" width="800" height="400"></canvas>
+        </div>
+    </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Chart.js for the 2D bar chart
+    var ctx1 = document.getElementById('deviceCountChart').getContext('2d');
+    var deviceCountChart = new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: ['Total', 'Laptops', 'Desktops', 'Monitors'],
+            datasets: [{
+                label: 'Device Count',
+                data: [{{ num_devices }}, {{ num_laptops }}, {{ num_desktops }}, {{ num_monitors }}],
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(153, 102, 255, 0.6)',
+                    'rgba(255, 159, 64, 0.6)',
+                    'rgba(255, 99, 132, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(255, 99, 132, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Data for the impact factor line chart
+    var years = [2016, 2017, 2018, 2019, 2020, 2021, 2022];
+    var impactFactors = [4, 4.2, 4.1, 3.8, 3.5, 3.9, 4];  // Example impact factors
+    var percentiles = [80, 85, 90, 95, 70, 60, 50];  // Example percentiles
+
+    // Create a line chart for Impact Factor
+    var ctx2 = document.getElementById('impactFactorChart').getContext('2d');
+    var impactFactorChart = new Chart(ctx2, {
+        type: 'line',
+        data: {
+            labels: years,
+            datasets: [
+                {
+                    label: 'Impact Factor',
+                    data: impactFactors,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    fill: false,
+                    tension: 0.1
+                },
+                {
+                    label: 'Percentile',
+                    data: percentiles,
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    fill: false,
+                    tension: 0.1,
+                    yAxisID: 'y1'
+                }
+            ]
+        },
+        options: {
+            scales: {
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Impact Factor'
+                    },
+                    beginAtZero: true
+                },
+                y1: {
+                    type: 'linear',
+                    position: 'right',
+                    title: {
+                        display: true,
+                        text: 'Percentile'
+                    },
+                    beginAtZero: true
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Year'
+                    }
+                }
+            }
+        }
+    });
+</script>
 
 {% endblock %}
